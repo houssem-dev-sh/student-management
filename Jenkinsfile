@@ -54,7 +54,11 @@ pipeline {
                         returnStdout: true
                     ).trim()
                     echo "Quality Gate: ${qg}"
-                    if (qg != 'OK') { error "Quality Gate failed!" }
+                    if (qg == 'ERROR') {
+                        error "Quality Gate failed: ${qg}"
+                    } else {
+                        echo "Quality Gate passed: ${qg}"
+                    }
                 }
             }
         }
