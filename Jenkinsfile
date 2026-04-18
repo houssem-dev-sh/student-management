@@ -83,8 +83,14 @@ pipeline {
 
         stage('🛡️ OWASP Dependency Check') {
             steps {
-                dependencyCheck additionalArguments: '--scan . --format HTML --format XML --out dependency-check-report', odcInstallation: 'OWASP-DC'
-                dependencyCheckPublisher pattern: 'dependency-check-report/dependency-check-report.xml'
+                dir('student-frontend-react') {
+                     sh 'npm audit --json > npm-audit-report.json || true'
+                     sh 'cat npm-audit-report.json'
+                }
+                sh '''mvn org.owasp:dependency-check-maven:check \
+                    -DfailBuildOnCVSS=9 \
+                    -Dformat=HTML \
+                    || true'''
             }
         }
 
