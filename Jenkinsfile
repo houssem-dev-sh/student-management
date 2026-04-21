@@ -86,11 +86,12 @@ pipeline {
                 dir('student-frontend-react') {
                      sh 'npm audit --json > npm-audit-report.json || true'
                      sh 'cat npm-audit-report.json'
-                }
-                sh '''mvn org.owasp:dependency-check-maven:check \
-                    -DfailBuildOnCVSS=9 \
-                    -Dformat=HTML \
-                    || true'''
+            }
+            sh '''mvn org.owasp:dependency-check-maven:check \
+                -DnvdApiKey=53ae4c6f-a483-4aaf-89f3-b50c7d0cf896 \
+                -DfailBuildOnCVSS=9 \
+                -Dformat=HTML \
+                || true'''
             }
         }
 
