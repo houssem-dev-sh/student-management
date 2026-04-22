@@ -18,7 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
-
+*.log
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -28,6 +28,8 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+node_modules/
 ### VS Code ###
 .vscode/
+.git/
+

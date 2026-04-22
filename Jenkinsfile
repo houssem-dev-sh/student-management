@@ -10,6 +10,11 @@ pipeline {
     environment {
         SONAR_PROJECT_KEY = 'student-management'
         SONAR_TOKEN = credentials('sonar-token')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_USERNAME = 'sara3006lab'
+        BACKEND_IMAGE = "${DOCKERHUB_USERNAME}/student-backend"
+        FRONTEND_IMAGE = "${DOCKERHUB_USERNAME}/student-frontend"
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
@@ -94,15 +99,65 @@ pipeline {
                 || true'''
             }
         }
-
-        stage('🔒 Trivy Scan') {
+        stage('🐳 Docker Build Backend') {
             steps {
-                sh 'trivy fs --severity HIGH,CRITICAL --format table . > trivy-report.txt'
-                sh 'cat trivy-report.txt'
+                sh "docker build -t ${BACKEND_IMAGE}:${IMAGE_TAG} ."
+                sh "docker tag ${BACKEND_IMAGE}:${IMAGE_TAG} ${BACKEND_IMAGE}:latest"
+                echo "✅ Backend image built: ${BACKEND_IMAGE}:${IMAGE_TAG}"
+            }
+        }
+
+        stage('🐳 Docker Build Frontend') {
+            steps {
+                dir('student-frontend-react') {
+                    sh "docker build -t ${FRONTEND_IMAGE}:${IMAGE_TAG} ."
+                    sh "docker tag ${FRONTEND_IMAGE}:${IMAGE_TAG} ${FRONTEND_IMAGE}:latest"
+                    echo "✅ Frontend image built: ${FRONTEND_IMAGE}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('🔒 Trivy Scan Backend') {
+            steps {
+                sh """
+                    trivy image \
+                        --severity HIGH,CRITICAL \
+                        --format table \
+                        --exit-code 0 \
+                        ${BACKEND_IMAGE}:${IMAGE_TAG} \
+                        > trivy-backend-report.txt 2>&1 || true
+                    cat trivy-backend-report.txt
+                """
+            }
+        }
+
+        stage('🔒 Trivy Scan Frontend') {
+            steps {
+                sh """
+                    trivy image \
+                        --severity HIGH,CRITICAL \
+                        --format table \
+                        --exit-code 0 \
+                        ${FRONTEND_IMAGE}:${IMAGE_TAG} \
+                        > trivy-frontend-report.txt 2>&1 || true
+                    cat trivy-frontend-report.txt
+                """
+            }
+        }
+
+        stage('📤 Push DockerHub') {
+            steps {
+                sh "echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin"
+                sh "docker push ${BACKEND_IMAGE}:${IMAGE_TAG}"
+                sh "docker push ${BACKEND_IMAGE}:latest"
+                sh "docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}"
+                sh "docker push ${FRONTEND_IMAGE}:latest"
+                echo "✅ Images pushed to DockerHub !"
             }
         }
 
     }
+
 
     post {
         success {
@@ -110,6 +165,9 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline échoué !'
+        }
+        always {
+            sh 'docker logout || true'
         }
     }
 }
