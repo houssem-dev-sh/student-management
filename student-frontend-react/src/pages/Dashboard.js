@@ -28,7 +28,7 @@ function Dashboard() {
 
   // ================= LOAD =================
   const loadStudents = () => {
-    fetch("http://localhost:8089/student/api/students")
+    fetch("http://localhost:30090/student/api/students")
       .then((res) => res.json())
       .then((data) => setStudents(data))
       .catch((err) => console.log("LOAD ERROR:", err));
@@ -40,7 +40,7 @@ function Dashboard() {
 
   // ================= DELETE =================
   const deleteStudent = (id) => {
-    fetch(`http://localhost:8089/student/api/students/${id}`, {
+    fetch(`http://localhost:30090/student/api/students/${id}`, {
       method: "DELETE",
     })
       .then(() => loadStudents())
@@ -95,8 +95,8 @@ function Dashboard() {
     const isEdit = form.id !== null;
 
     const url = isEdit
-      ? `http://localhost:8089/student/api/students/${form.id}`
-      : "http://localhost:8089/student/api/students";
+      ? `http://localhost:30090/student/api/students/${form.id}`
+      : "http://localhost:30090/student/api/students";
 
     const method = isEdit ? "PUT" : "POST";
 
