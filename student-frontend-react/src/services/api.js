@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8089/student/api/students";
+const API_URL = "http://localhost:30090/student/api/students";
 
 // GET all
 export const getStudents = () =>
