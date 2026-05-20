@@ -5,7 +5,7 @@ function AddStudent({ refresh }) {
   const [last, setLast] = useState("");
 
   const add = () => {
-    fetch("http://localhost:8089/student/api/students", {
+    fetch("http://localhost:30090/student/api/students", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
