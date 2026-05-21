@@ -24,7 +24,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:30090/student/api/auth/login',
+        'http://localhost:8089/student/api/auth/login',
         { email, password }
       );
 
