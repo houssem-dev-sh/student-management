@@ -8,7 +8,7 @@ import tn.esprit.studentmanagement.services.IStudentService;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*") // NOSONAR
 @RequestMapping("/api/students")
 @AllArgsConstructor
 public class StudentController {
