@@ -74,7 +74,7 @@ pipeline {
             }
         }
 
-       /* stage('🛡️ OWASP Dependency Check') {
+        stage('🛡️ OWASP Dependency Check') {
             steps {
                 dir('.') {
                     sh '''
@@ -85,7 +85,7 @@ pipeline {
                     '''
                 }
             }
-        }*/
+        }
         stage('🐳 Docker Build Backend') {
             steps {
                 sh "docker build -t ${BACKEND_IMAGE}:latest ."
