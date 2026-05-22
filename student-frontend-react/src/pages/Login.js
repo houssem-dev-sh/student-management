@@ -24,7 +24,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8089/student/api/auth/login',
+        '/student/api/auth/login',
         { email, password }
       );
 
@@ -47,7 +47,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8089/student/api/auth/verify-otp',
+        '/student/api/auth/login',
         { email, otp }
       );
 
